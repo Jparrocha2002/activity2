@@ -6,51 +6,23 @@ class UserController extends Database
 {
     public function insert($params)
     {
-        // if(!isset($params['first_name']) || empty($params['first_name']))
-        // {
-        //     return json_encode([
-        //         'code' => 422,
-        //         'message' => 'first_name is required'
-        //     ]);
-        // }
+        $array = ['first_name','last_name','email','password','token'];
 
-        // if(!isset($params['last_name']) || empty($params['last_name']))
-        // {
-        //     return json_encode([
-        //         'code' => 422,
-        //         'message' => 'last_name is required'
-        //     ]);
-        // }
-
-        // if(!isset($params['email']) || empty($params['email']))
-        // {
-        //     return json_encode([
-        //         'code' => 422,
-        //         'message' => 'email is required'
-        //     ]);
-        // }
-
-        // if(!isset($params['password']) || empty($params['password']))
-        // {
-        //     return json_encode([
-        //         'code' => 422,
-        //         'message' => 'password is required'
-        //     ]);
-        // }
-
-        // if(!isset($params['token']) || empty($params['token']))
-        // {
-        //     return json_encode([
-        //         'code' => 422,
-        //         'message' => 'token is required'
-        //     ]);
-        // }
-
-            $first_name = $params['first_name'] ?? '';
-            $last_name = $params['last_name'] ?? '';
-            $email = $params['email'] ?? '';
-            $password = $params['password'] ?? '';
-            $token = $params['token'] ?? '';
+        foreach($array as $key)
+        {
+            if(empty($params[$key]))
+            {
+                return json_encode([
+                    'code' => 401,
+                    'message' => "$key is required"
+                ]);
+            }
+        }
+            $first_name = $params['first_name'];
+            $last_name = $params['last_name'];
+            $email = $params['email'];
+            $password = $params['password'];
+            $token = $params['token'];
 
             $insert = "INSERT INTO user(first_name,last_name,email,password,token)VALUES('$first_name','$last_name','$email','$password','$token')";
             $isInserted = $this->conn->query($insert);
@@ -91,7 +63,7 @@ class UserController extends Database
 
         if($data)
         {
-            $result = $data->fetch_assoc();
+            $result = $data->fetch_all(MYSQLI_ASSOC);
             return $result;
         } else {
             return json_encode([
