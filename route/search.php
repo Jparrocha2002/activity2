@@ -2,7 +2,7 @@
 
 include '../controller/UserController.php';
 
-$search = new UserController();
-echo $search->search($_GET);
-
+$data = new UserController();
+$search = $data->search($_GET);
+echo json_encode($search);
 ?>

@@ -6,8 +6,7 @@ class Database
 
     public function __construct()
     {
-        $this->conn = new mysqli('localhost','root','','parrocha');
-        $this->conn->query('USE parrocha');
+        $this->conn = new mysqli('localhost','root','','api_db');
     }
 }
 ?>

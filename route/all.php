@@ -3,6 +3,7 @@
 include '../controller/UserController.php';
 
 $all = new UserController();
-$all->allData($_GET);
+$alldata = $all->getAll();
+echo json_encode($alldata);
 
 ?>
