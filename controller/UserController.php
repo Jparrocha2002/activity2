@@ -24,8 +24,10 @@ class UserController extends Database
             $password = $params['password'];
             $token = $params['token'];
 
-            $insert = "INSERT INTO user(first_name,last_name,email,password,token)VALUES('$first_name','$last_name','$email','$password','$token')";
-            $isInserted = $this->conn->query($insert);
+            $statement = $this->conn->prepare("INSERT INTO user(first_name, last_name, email, password, token) VALUES(?, ?, ?, ?, ?)");
+            $statement->bind_param("sssss", $first_name, $last_name, $email, $password, $token);
+
+            $isInserted = $statement->execute();
 
             if($isInserted)
             {
@@ -59,9 +61,13 @@ class UserController extends Database
         }
 
         $email = $search['email'] ?? '';
-        $data = $this->conn->query("SELECT * FROM user WHERE email LIKE '%$email%'");
+        $statement = $this->conn->prepare("SELECT * FROM user WHERE email LIKE ?");
+        $emailSearch = "%$email%";
+        $statement->bind_param("s", $emailSearch);
+        $statement->execute();
 
-        if($data)
+        $data = $statement->get_result();
+        if($data->num_rows > 0)
         {
             $result = $data->fetch_all(MYSQLI_ASSOC);
             return $result;
